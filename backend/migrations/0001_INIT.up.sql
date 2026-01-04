@@ -1,0 +1,5 @@
+CREATE TABLE Users(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    hashed_password BLOB NOT NULL
+) STRICT;

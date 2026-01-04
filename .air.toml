@@ -1,0 +1,22 @@
+#:schema https://json.schemastore.org/any.json
+
+root = "."
+testdata_dir = "testdata"
+tmp_dir = "tmp"
+
+[build]
+  args_bin = []
+  bin = "./tmp/filestorage"
+  cmd = "go build -o ./tmp/filestorage ./backend/cmd/filestorage"
+  delay = 50
+  entrypoint = ["./tmp/filestorage"]
+  exclude_dir = ["assets", "tmp", "vendor", "testdata"]
+  include_dir = ["backend"]
+  include_ext = ["go", "sql"]
+  exclude_regex= [".*_templ.go"]
+
+[log]
+  main_only = true
+
+[misc]
+  clean_on_exit = false

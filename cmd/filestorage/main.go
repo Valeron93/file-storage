@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Valeron93/file-storage/backend/api"
+	"github.com/Valeron93/file-storage/backend/auth"
 	"github.com/Valeron93/file-storage/backend/migrations"
 	"github.com/Valeron93/file-storage/cmd/database"
 	"github.com/Valeron93/file-storage/frontend"
@@ -24,6 +26,10 @@ func main() {
 		panic(err)
 	}
 
+	auth := auth.NewSQLite(db)
+
+	authApi := api.NewAuthAPI(auth)
+
 	r := chi.NewRouter()
 
 	r.Use(middleware.Recoverer)
@@ -33,9 +39,8 @@ func main() {
 	r.Handle("/*", frontend.Handler)
 
 	r.Route("/api", func(r chi.Router) {
-		r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("OK"))
-		})
+		r.Post("/register", authApi.HandleRegister)
+		r.Post("/login", authApi.HandleLogin)
 	})
 
 	const addr = ":3000"

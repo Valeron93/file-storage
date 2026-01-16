@@ -1,38 +1,23 @@
 package main
 
 import (
-	"context"
-	"database/sql"
 	"log"
-	"log/slog"
 	"net/http"
 
 	"github.com/Valeron93/file-storage/backend/migrations"
+	"github.com/Valeron93/file-storage/cmd/database"
 	"github.com/Valeron93/file-storage/frontend"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"modernc.org/sqlite"
 )
-
-func init() {
-	// SQLite settings
-	sqlite.RegisterConnectionHook(func(conn sqlite.ExecQuerierContext, dsn string) error {
-		query := `
-		PRAGMA foreign_keys = ON;
-		PRAGMA journal_mode = WAL;
-		PRAGMA synchronous = NORMAL;
-		PRAGMA temp_store = MEMORY;
-		PRAGMA busy_timeout = 5000;
-		PRAGMA mmap_size = 268435456;
-		`
-		_, err := conn.ExecContext(context.Background(), query, nil)
-		return err
-	})
-}
 
 func main() {
 
-	db := openDB()
+	db, err := database.OpenSQLite("./tmp/db.sqlite")
+	if err != nil {
+		log.Panicf("failed to open database: %v", err)
+	}
+
 	defer db.Close()
 
 	if err := migrations.RunMigrations(db); err != nil {
@@ -54,18 +39,8 @@ func main() {
 	})
 
 	const addr = ":3000"
-	slog.Info("listening http", slog.Any("addr", addr))
+	log.Printf("listening HTTP on %#v", addr)
 	if err := http.ListenAndServe(addr, r); err != nil {
-		slog.Error("error: http", "err", err)
+		log.Printf("http error: %v", err)
 	}
-}
-
-func openDB() *sql.DB {
-
-	db, err := sql.Open("sqlite", "./tmp/db.sqlite3")
-	if err != nil {
-		log.Panic(err)
-	}
-
-	return db
 }

@@ -19,4 +19,4 @@ tmp_dir = "tmp"
   main_only = true
 
 [misc]
-  clean_on_exit = true
+  clean_on_exit = false

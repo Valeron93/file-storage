@@ -7,16 +7,16 @@ tmp_dir = "tmp"
 [build]
   args_bin = []
   bin = "./tmp/filestorage"
-  cmd = "go build -o ./tmp/filestorage ./backend/cmd/filestorage"
+  cmd = "go build -o ./tmp/filestorage ./cmd/filestorage"
   delay = 50
   entrypoint = ["./tmp/filestorage"]
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]
-  include_dir = ["backend"]
+  include_dir = ["backend", "cmd"]
   include_ext = ["go", "sql"]
-  exclude_regex= [".*_templ.go"]
+  exclude_regex= []
 
 [log]
   main_only = true
 
 [misc]
-  clean_on_exit = false
+  clean_on_exit = true

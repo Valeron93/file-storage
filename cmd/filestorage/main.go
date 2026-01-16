@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/Valeron93/file-storage/backend/migrations"
-	"github.com/Valeron93/file-storage/backend/vite"
+	"github.com/Valeron93/file-storage/frontend"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"modernc.org/sqlite"
@@ -45,7 +45,7 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.RealIP)
 
-	r.Handle("/*", vite.Handler)
+	r.Handle("/*", frontend.Handler)
 
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/health", func(w http.ResponseWriter, r *http.Request) {

@@ -1,6 +1,6 @@
 //go:build dist
 
-package vite
+package frontend
 
 import (
 	"embed"
